@@ -10,7 +10,7 @@ actor Dkeeper {
 
   //Creating a variable of type List
 
-  var notes : List.List<Note> = List.nil<Note>();
+  stable var notes : List.List<Note> = List.nil<Note>();
 
   //Creting a note
   public func createNote(titleText : Text, contentText : Text) {
@@ -21,4 +21,19 @@ actor Dkeeper {
     notes := List.push(newNote, notes);
     Debug.print(debug_show (notes));
   };
+
+  //Retrieving Data from a Canister
+  public query func readNotes() : async [Note] {
+    return List.toArray(notes);
+  };
+
+  //Deleting Data from a Canister
+
+  public func removeNote(id : Nat) {
+    //take drop append
+    let listFront = List.take(notes, id);
+    let listBack = List.drop(notes, id +1);
+    notes := List.append(listFront, listBack);
+  };
+
 };
